@@ -1,7 +1,30 @@
 import Image from "next/image";
 import Head from "next/head";
+import { supabase } from "../lib/supabaseClient";
+import { useEffect, useState } from "react";
 
 export default function Home() {
+  const [testimonials, setTestimonials] = useState([]);
+
+  useEffect(() => {
+    const fetchTestimonials = async () => {
+      try {
+        const { data, error } = await supabase
+          .from("testimoni")
+          .select("*")
+          .order("created_at", { ascending: false });
+
+        if (error) throw error;
+
+        setTestimonials(data);
+      } catch (err) {
+        console.error("Error fetching testimonials:", err.message);
+      }
+    };
+
+    fetchTestimonials();
+  }, []);
+
   return (
     <>
       <Head>
