@@ -2,20 +2,35 @@ import { supabase } from "../../lib/supabaseClient";
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
-    const { kode_transaksi, nama_produk, rating, komentar, nama } = req.body;
+    const { kode_transaksi, nama, nama_produk, rating, komentar } = req.body;
+
+    // console.log("Request body:", req.body); // Debugging log
 
     try {
-      const { data, error } = await supabase
-        .from("testimoni")
-        .insert([{ kode_transaksi, nama_produk, rating, komentar, nama }]);
+      const { data, error } = await supabase.from("testimoni").insert([
+        {
+          kode_transaksi,
+          nama,
+          nama_produk,
+          rating,
+          komentar,
+        },
+      ]);
 
-      if (error) throw error;
+      //   console.log("Supabase response:", data, error); // Log hasil dari Supabase
+
+      if (error) {
+        console.error("Supabase error:", error.message);
+        throw error;
+      }
 
       res.status(200).json({ message: "Testimoni berhasil disimpan!", data });
-    } catch (err) {
-      res.status(500).json({ error: err.message });
+    } catch (error) {
+      console.error("Server error:", error.message); // Log error ke console
+      res.status(500).json({ error: error.message });
     }
   } else {
-    res.status(405).json({ error: "Method not allowed" });
+    res.setHeader("Allow", ["POST"]);
+    res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 }
