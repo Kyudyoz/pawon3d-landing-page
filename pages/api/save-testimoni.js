@@ -1,32 +1,26 @@
-import { supabase } from "../../lib/supabaseClient";
+// pages/api/save-testimoni.js
+import { supabase } from "@/lib/supabaseClient";
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
-    const { kode_transaksi, nama, nama_produk, rating, komentar } = req.body;
-
-    // console.log("Request body:", req.body); // Debugging log
+    const { kode_transaksi, nama, produk, rating_komentar } = req.body;
 
     try {
-      const { data, error } = await supabase.from("testimoni").insert([
-        {
-          kode_transaksi,
-          nama,
-          nama_produk,
-          rating,
-          komentar,
-        },
-      ]);
+      // Loop through produk array and insert each row individually
+      const insertData = rating_komentar.map((item) => ({
+        kode_transaksi,
+        nama,
+        produk: item.produk,
+        rating: item.rating,
+        komentar: item.komentar,
+      }));
 
-      //   console.log("Supabase response:", data, error); // Log hasil dari Supabase
+      const { error } = await supabase.from("testimoni").insert(insertData);
 
-      if (error) {
-        console.error("Supabase error:", error.message);
-        throw error;
-      }
+      if (error) throw error;
 
-      res.status(200).json({ message: "Testimoni berhasil disimpan!", data });
+      res.status(200).json({ message: "Testimoni berhasil disimpan!" });
     } catch (error) {
-      console.error("Server error:", error.message); // Log error ke console
       res.status(500).json({ error: error.message });
     }
   } else {

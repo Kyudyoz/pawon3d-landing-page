@@ -2,24 +2,26 @@ import Image from "next/image";
 import Head from "next/head";
 import { supabase } from "../lib/supabaseClient";
 import { useEffect, useState } from "react";
+import { DarkThemeToggle } from "flowbite-react";
+import Link from "next/link";
+import {
+  Navbar,
+  NavbarBrand,
+  NavbarCollapse,
+  NavbarLink,
+  NavbarToggle,
+  Tabs,
+  Carousel,
+  Rating,
+} from "flowbite-react";
 
 export default function Home() {
   const [testimonials, setTestimonials] = useState([]);
 
   useEffect(() => {
     const fetchTestimonials = async () => {
-      try {
-        const { data, error } = await supabase
-          .from("testimoni")
-          .select("*")
-          .order("created_at", { ascending: false });
-
-        if (error) throw error;
-
-        setTestimonials(data);
-      } catch (err) {
-        console.error("Error fetching testimonials:", err.message);
-      }
+      const { data, error } = await supabase.from("testimoni").select("*");
+      if (!error) setTestimonials(data);
     };
 
     fetchTestimonials();
@@ -46,54 +48,70 @@ export default function Home() {
         <meta property="og:image" content="/hero.jpg" />
         <meta property="og:url" content="https://pawon3d.com" />
         <meta name="twitter:card" content="summary_large_image" />
+        <link
+          href="https://cdn.jsdelivr.net/npm/daisyui@4.12.23/dist/full.min.css"
+          rel="stylesheet"
+          type="text/css"
+        />
       </Head>
 
-      <main className="min-h-screen bg-gray-100">
+      <main className="min-h-screen bg-gray-100 ">
         {/* Header */}
-        <header className="bg-yellow-400 text-white p-4">
-          <div className="container mx-auto flex justify-between items-center">
-            <h1 className="text-2xl font-bold">Pawon3D</h1>
-            <nav>
-              <ul className="flex gap-4">
-                <li>
-                  <a href="#about" className="hover:underline">
-                    Tentang Kami
-                  </a>
-                </li>
-                <li>
-                  <a href="#products" className="hover:underline">
-                    Produk
-                  </a>
-                </li>
-                <li>
-                  <a href="#contact" className="hover:underline">
-                    Kontak
-                  </a>
-                </li>
-              </ul>
-            </nav>
-          </div>
-        </header>
+        <Navbar className="sticky top-0 z-50 shadow-md">
+          <NavbarBrand as={Link} href="/" className="ml-10">
+            <Image
+              src="/favicon.ico"
+              className="mr-3 h-6 sm:h-9"
+              alt="Pawon3D logo"
+              width={36}
+              height={36}
+            />
+            <span className="self-center whitespace-nowrap text-xl font-semibold text-black dark:text-white">
+              Pawon3D
+            </span>
+          </NavbarBrand>
+          <NavbarToggle />
+          <NavbarCollapse className="lg:mr-10">
+            <NavbarLink href="#">Home</NavbarLink>
+            <NavbarLink href="#about">Tentang Kami</NavbarLink>
+            <NavbarLink href="#products">Produk</NavbarLink>
+            <NavbarLink href="#testimonials">Testimoni</NavbarLink>
+            <NavbarLink href="#contact">Kontak</NavbarLink>
+          </NavbarCollapse>
+          <DarkThemeToggle className="lg:block hidden mr-10" />
+        </Navbar>
 
         {/* Hero Section */}
-        <section
-          className="bg-cover bg-center h-[70vh] flex items-center justify-center"
-          style={{ backgroundImage: "url(/hero.jpg)" }}
-        >
-          <div className="text-center text-white p-4 bg-black bg-opacity-50 rounded-lg">
-            <h2 className="text-4xl font-bold mb-4">
-              Kelezatan dalam Setiap Gigitan
-            </h2>
-            <p className="text-lg">
-              Nikmati kehangatan rasa kue buatan kami yang dibuat dengan cinta.
-            </p>
+        <section>
+          <div className="hero dark:bg-slate-700 bg-gray-100 min-h-screen">
+            <div className="hero-content flex-col lg:flex-row-reverse ">
+              <Image
+                src="/next.svg"
+                className="max-w-sm rounded-lg shadow-2xl"
+                alt="Hero image"
+                width={400}
+                height={400}
+              />
+              <div className="lg:mr-32 text-black dark:text-white">
+                <h1 className="text-5xl font-bold">
+                  Kelezatan dalam Setiap Gigitan
+                </h1>
+                <p className="py-6">
+                  Nikmati kehangatan rasa kue buatan kami yang dibuat dengan
+                  cinta.
+                </p>
+                <button className="btn btn-success text-white">
+                  Pesan Sekarang
+                </button>
+              </div>
+            </div>
           </div>
         </section>
 
         {/* About Section */}
         <section id="about" className="py-16 bg-white">
           <div className="container mx-auto text-center">
-            <h3 className="text-3xl font-bold mb-4">Tentang Kami</h3>
+            <h3 className="text-3xl font-bold mb-4 text-black">Tentang Kami</h3>
             <p className="text-gray-700">
               Pawon3D adalah toko kue yang menawarkan berbagai macam kue
               berkualitas tinggi dengan rasa yang otentik dan lezat. Setiap kue
@@ -103,87 +121,126 @@ export default function Home() {
         </section>
 
         {/* Products Section */}
-        <section id="products" className="py-16 bg-gray-100">
+        <section id="products" className="py-16 bg-gray-50">
           <div className="container mx-auto text-center">
-            <h3 className="text-3xl font-bold mb-4">Produk Kami</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {/* Product Cards */}
-              <div className="bg-white p-4 rounded-lg shadow-md">
-                <Image
-                  className="rounded-md mb-4"
-                  src="/next.svg"
-                  alt="Next.js logo"
-                  width={180}
-                  height={38}
-                  priority
-                />
-                <h4 className="text-xl font-bold">Kue Cokelat</h4>
-                <p className="text-gray-600">
-                  Kue cokelat lembut dengan taburan cokelat premium.
+            <h3 className="text-3xl font-bold mb-4 text-black">Produk Kami</h3>
+            <Tabs
+              aria-label="Pills"
+              variant="pills"
+              className="flex justify-center"
+            >
+              <Tabs.Item active title="Tab 1">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 px-6">
+                  {/* Product Cards */}
+                  <div className="bg-white p-4 rounded-lg shadow-md">
+                    <Image
+                      className="rounded-md mb-4"
+                      src="/next.svg"
+                      alt="Next.js logo"
+                      width={180}
+                      height={38}
+                      priority
+                    />
+                    <h4 className="text-xl font-bold text-black">
+                      Kue Cokelat
+                    </h4>
+                    <p className="text-gray-600">
+                      Kue cokelat lembut dengan taburan cokelat premium.
+                    </p>
+                  </div>
+                  <div className="bg-white p-4 rounded-lg shadow-md">
+                    <Image
+                      className="rounded-md mb-4"
+                      src="/next.svg"
+                      alt="Next.js logo"
+                      width={180}
+                      height={38}
+                      priority
+                    />
+                    <h4 className="text-xl font-bold text-black">Kue Keju</h4>
+                    <p className="text-gray-600">
+                      Kue keju dengan rasa yang gurih dan lembut.
+                    </p>
+                  </div>
+                  <div className="bg-white p-4 rounded-lg shadow-md">
+                    <Image
+                      className="rounded-md mb-4"
+                      src="/next.svg"
+                      alt="Next.js logo"
+                      width={180}
+                      height={38}
+                      priority
+                    />
+                    <h4 className="text-xl font-bold text-black">Kue Pandan</h4>
+                    <p className="text-gray-600">
+                      Kue pandan klasik dengan aroma khas.
+                    </p>
+                  </div>
+                </div>
+              </Tabs.Item>
+              <Tabs.Item title="Tab 2">
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  Content 2
                 </p>
-              </div>
-              <div className="bg-white p-4 rounded-lg shadow-md">
-                <Image
-                  className="rounded-md mb-4"
-                  src="/next.svg"
-                  alt="Next.js logo"
-                  width={180}
-                  height={38}
-                  priority
-                />
-                <h4 className="text-xl font-bold">Kue Keju</h4>
-                <p className="text-gray-600">
-                  Kue keju dengan rasa yang gurih dan lembut.
+              </Tabs.Item>
+              <Tabs.Item title="Tab 3">
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  Content 3
                 </p>
-              </div>
-              <div className="bg-white p-4 rounded-lg shadow-md">
-                <Image
-                  className="rounded-md mb-4"
-                  src="/next.svg"
-                  alt="Next.js logo"
-                  width={180}
-                  height={38}
-                  priority
-                />
-                <h4 className="text-xl font-bold">Kue Pandan</h4>
-                <p className="text-gray-600">
-                  Kue pandan klasik dengan aroma khas.
+              </Tabs.Item>
+              <Tabs.Item title="Tab 4">
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  Content 4
                 </p>
-              </div>
-            </div>
+              </Tabs.Item>
+            </Tabs>
           </div>
         </section>
 
         {/* Testimonials Section */}
-        <section className="mb-12 py-6">
-          <h2 className="text-3xl font-bold text-center mb-4">
+        <section id="testimonials" className="mb-12 py-6">
+          <h2 className="text-3xl font-bold text-center mb-4 text-black">
             Testimoni Pelanggan
           </h2>
           {testimonials.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {testimonials.map((testi) => (
-                <div key={testi.id} className="border rounded-lg p-4 shadow-lg">
-                  <h3 className="text-lg font-bold mb-2">{testi.nama}</h3>
-                  <ul>
-                    {testi.nama_produk.map((produk, index) => (
-                      <li key={index} className="mb-2">
+            <div className="h-56 sm:h-64 xl:h-80 2xl:h-96 text-black px-6">
+              <Carousel
+                className="px-10"
+                indicators={false}
+                pauseOnHover
+                slideInterval={5000}
+                leftControl=" "
+                rightControl=" "
+              >
+                {testimonials.map((testi) => (
+                  <div
+                    key={`${testi.kode_transaksi}-${testi.produk}`}
+                    className="flex bg-slate-200 justify-center items-center border rounded-lg p-4 shadow-lg h-56 sm:h-64 xl:h-80 2xl:h-96"
+                  >
+                    <div>
+                      <h3 className="text-lg font-bold mb-2">{testi.nama}</h3>
+                      <div className="mb-2">
                         <p>
-                          <strong>Produk:</strong> {produk}
+                          <strong>Produk:</strong> {testi.produk}
                         </p>
+                        <div className="flex items-center">
+                          <strong>Rating:</strong>
+                          <Rating>
+                            <Rating.Star filled={testi.rating >= 1} />
+                            <Rating.Star filled={testi.rating >= 2} />
+                            <Rating.Star filled={testi.rating >= 3} />
+                            <Rating.Star filled={testi.rating >= 4} />
+                            <Rating.Star filled={testi.rating >= 5} />
+                          </Rating>
+                        </div>
                         <p>
-                          <strong>Rating:</strong> {testi.rating[index]} / 5
+                          <strong>Komentar:</strong> {testi.komentar}
                         </p>
-                        <p>
-                          <strong>Komentar:</strong> {testi.komentar[index]}
-                        </p>
-                      </li>
-                    ))}
-                  </ul>
-                  <p className="text-sm text-gray-500 mt-4">
-                    <strong>Kode Transaksi:</strong> {testi.kode_transaksi}
-                  </p>
-                </div>
-              ))}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </Carousel>
             </div>
           ) : (
             <p className="text-center text-gray-500">
