@@ -46,7 +46,7 @@ export default function Home() {
         />
 
         <meta property="og:image" content="/hero.jpg" />
-        <meta property="og:url" content="https://pawon3d.com" />
+        <meta property="og:url" content="https://pawon3d.vercel.app/" />
         <meta name="twitter:card" content="summary_large_image" />
         <link
           href="https://cdn.jsdelivr.net/npm/daisyui@4.12.23/dist/full.min.css"
